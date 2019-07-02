@@ -18,7 +18,11 @@ The above link takes you to a video of the parking space detection program in ac
 
 To run:
 ```python
-python main.py --image images/parking_lot_1.png --data data/coordinates_1.yml --video videos/parking_lot_1.mp4 --start-frame 400
+generate coordinate data file from video screenshot
+python main.py --image images/parking_lot_1.png --data_generate_file data/parking_lot_coord.yml
+
+use parking lot data file against a video
+python main.py --data_file data/parking_lot_coord.yml --video_file videos/parking_lot_1.mp4
 ```
 
 Program flow is as follows:

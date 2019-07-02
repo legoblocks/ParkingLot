@@ -12,18 +12,24 @@ def main():
     args = parse_args()
 
     image_file = args.image_file
+    data_generate_file = args.data_generate_file
     data_file = args.data_file
+    video_file = args.video_file
     start_frame = args.start_frame
 
-    if image_file is not None:
-        with open(data_file, "w+") as points:
+    # generate coordinate based data map.
+    if image_file is not None and args.data_generate_file:
+        with open(data_generate_file, "w+") as points:
             generator = CoordinatesGenerator(image_file, points, COLOR_RED)
             generator.generate()
 
-    with open(data_file, "r") as data:
-        points = yaml.load(data)
-        detector = MotionDetector(args.video_file, points, int(start_frame))
-        detector.detect_motion()
+    # read from coordinate data map
+    if data_file is not None and video_file is not None:
+        with open(data_file, "r") as data:
+            #points = yaml.load(data)
+            points = yaml.safe_load(data)
+            detector = MotionDetector(video_file, points, int(start_frame))
+            detector.detect_motion()
 
 
 def parse_args():
@@ -34,19 +40,24 @@ def parse_args():
                         required=False,
                         help="Image file to generate coordinates on")
 
-    parser.add_argument("--video",
+    parser.add_argument("--video_file",
                         dest="video_file",
-                        required=True,
+                        #required=True,
                         help="Video file to detect motion on")
 
-    parser.add_argument("--data",
+    parser.add_argument("--data_generate_file",
+                        dest="data_generate_file",
+                        #required=True,
+                        help="Data file to be used with OpenCV")
+
+    parser.add_argument("--data_file",
                         dest="data_file",
-                        required=True,
+                        #required=True,
                         help="Data file to be used with OpenCV")
 
     parser.add_argument("--start-frame",
                         dest="start_frame",
-                        required=False,
+                        #required=False,
                         default=1,
                         help="Starting frame on the video")
 
